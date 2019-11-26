@@ -57,14 +57,14 @@
               <option value="any" selected>Any type of housing</option>
               <option value="flat">Apartment</option>
               <option value="house">House</option>
-              <option value="bungalo">Barn</option>
+              <option value="bungalo">Bungalo</option>
             </select>
 
             <select name="housing-price" id="housing-price" class="map__filter">
               <option value="any" selected> Any</option>
-              <option value="middle">10000 - 50000&#x20bd;</option>
-              <option value="low">до 10000&#x20bd;</option>
-              <option value="high">от 50000&#x20bd;</option>
+              <option value="middle">10000 - 50000&#36;</option>
+              <option value="low">to 10000&#36;</option>
+              <option value="high">from 50000&#36;</option>
             </select>
 
             <select name="housing-rooms" id="housing-rooms" class="map__filter">
@@ -240,8 +240,7 @@
               <option value="1" selected> 1 room</option>
               <option value="2">2 rooms</option>
               <option value="3"> 3 rooms</option>
-              <option value="100">
-                100 rooms</option>
+              <option value="100"> 100 rooms</option>
             </select>
           </fieldset>
 
@@ -363,7 +362,10 @@
       <div class="center-wrapper">
         <section class="footer-logo">
           Made in
-          <a tabindex="1" href="https://rainspistols.github.io/Byteserker/" class="footer-logo-link"
+          <a
+            tabindex="1"
+            href="https://rainspistols.github.io/Byteserker/"
+            class="footer-logo-link"
             >Byteserker</a
           >
           &copy; 2019
@@ -416,12 +418,12 @@
           Cozy nest for honeymooners
         </h3>
         <p><small>102-0082 Tōkyō-to, Chiyoda-ku, Ichibanchō, 14−3</small></p>
-        <p class="popup__price">5200&#x20bd;/night</p>
+        <p class="popup__price">5200&#36;/night</p>
         <h4>Apartment</h4>
-        <p>
+        <p class="popup__text--capacity">
           2 rooms for 3 guests
         </p>
-        <p>
+        <p class="popup__text--time">
           Check-in after 14:00, check-out until 10:00
         </p>
         <ul class="popup__features">
@@ -432,7 +434,7 @@
           <li class="feature feature--elevator"></li>
           <li class="feature feature--conditioner"></li>
         </ul>
-        <p>
+        <p class="popup__description">
           Magnificent studio apartment in the center of Tokyo. Suitable for both
           tourists so businessmen. The apartment is fully equipped and recently
           renovated.
@@ -451,5 +453,7 @@
         />
       </button>
     </template>
+
+    <script src="./main.bundle.js"></script>
   </body>
 </html>
