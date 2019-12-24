@@ -1,5 +1,24 @@
 'use strict';
 
+var MAP_CLASS = document.querySelector('.map');
+var FIELDSETS = document.querySelectorAll('fieldset');
+
+function disableForm() {
+  FIELDSETS.forEach((item) => (item.disabled = true));
+}
+
+// random value including min and max;
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomArrItem(arr) {
+  var rand = Math.floor(Math.random() * arr.length);
+  return arr[rand];
+}
+
 var example = [
   {
     author: {
@@ -70,21 +89,6 @@ var example = [
   },
 ];
 
-// calculate random value including min and max;
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function getRandomArrItem(arr) {
-  var rand = Math.floor(Math.random() * arr.length);
-  return arr[rand];
-}
-
-var MAP_CLASS = document.querySelector('.map');
-MAP_CLASS.classList.remove('map--faded');
-
 var MAP_PIN_TEMPLATE = document
   .querySelector('template')
   .content.querySelector('.map__pin');
@@ -97,11 +101,10 @@ var MAP_FILTERS_CONTAINER = MAP_CLASS.querySelector('.map__filters-container');
 
 for (var i = 0; i < 8; i++) {
   var mapPinFragment = MAP_PIN_TEMPLATE.cloneNode(true);
-
+  //build avatars on the map
   mapPinFragment.style = example[0].offer.address();
   mapPinFragment.querySelector('img').src = example[0].author.avatar(i);
   mapPinFragment.querySelector('img').alt = example[0].offer.title[i];
-
   MAP_PINS.appendChild(mapPinFragment);
 
   var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
@@ -113,8 +116,9 @@ for (var i = 0; i < 8; i++) {
   popupPrice.classList.add('popup__text--price');
   popupPrice.innerText = example[0].offer.price();
   // Don't know why i need it
-  // mapCardFragment.querySelector('small').classList.add('popup__text--adrress');
-  // mapCardFragment.querySelector('small').innerText = example[0].offer.address();
+  mapCardFragment.querySelector('small').classList.add('popup__text--adrress');
+  mapCardFragment.querySelector('small').innerText = example[0].offer.address();
+  // CREATED POPUP_CARDS
   var popupType = mapCardFragment.querySelector('h4');
   popupType.classList.add('poput__type');
   popupType.innerText = example[0].offer.type[i];
@@ -147,3 +151,50 @@ for (var i = 0; i < 8; i++) {
 
   MAP_CLASS.insertBefore(mapCardFragment, MAP_FILTERS_CONTAINER);
 }
+
+var MAP_CARD = document.querySelectorAll('.map__card');
+var MAP_PIN = document.querySelectorAll('.map__pin');
+
+function hideMapCards() {
+  MAP_CARD.forEach((item) => item.classList.add('hidden'));
+}
+
+function hideAvatars() {
+  MAP_PIN.forEach((item) =>
+    item.classList.contains('map__pin--main')
+      ? item
+      : item.classList.add('hidden')
+  );
+}
+
+function showAvatars() {
+  MAP_PIN.forEach((item) =>
+    item.classList.contains('map__pin--main')
+      ? item
+      : item.classList.remove('hidden')
+  );
+}
+
+function showMapCards() {
+  MAP_CARD.forEach((item) => item.classList.remove('hidden'));
+}
+
+var MAP_PIN_MAIN = document.querySelector('.map__pin--main');
+
+MAP_PIN_MAIN.style.zIndex = '2';
+document.querySelector('.map__pinsoverlay').querySelector('h2').style.zIndex =
+  '2';
+
+MAP_PIN_MAIN.addEventListener('mouseup', function() {
+  MAP_CLASS.classList.remove('map--faded');
+  FIELDSETS.forEach((item) => (item.disabled = false));
+  showAvatars();
+});
+
+MAP_PIN[0].addEventListener('click', function() {
+  console.log(MAP_CARD);
+});
+
+disableForm();
+hideMapCards();
+hideAvatars();

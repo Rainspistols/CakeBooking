@@ -701,3 +701,7 @@ textarea:focus {
 .footer-social-item-vk {
   background-position: -10px -10px;
 }
+
+button {
+  cursor: pointer;
+}
