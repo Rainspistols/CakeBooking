@@ -127,9 +127,16 @@ textarea:focus {
   height: 28px;
   min-height: 28px;
 
-  background: url('../img/features-sprite.png') center no-repeat;
   background-size: 100%;
   overflow: hidden;
+}
+
+.feature {
+  background: url('../img/features-sprite.webp') center no-repeat;
+}
+
+.no-webp .feature {
+  background: url('../img/features-sprite.png') center no-repeat;
 }
 
 .feature--dishwasher {
@@ -166,7 +173,13 @@ textarea:focus {
   left: 50%;
   top: 40px;
   transform: translateX(-50%);
+}
 
+.header {
+  background: url('../img/logo.webp') no-repeat center;
+}
+
+.no-webp .header {
   background: url('../img/logo.png') no-repeat center;
 }
 
@@ -180,8 +193,15 @@ textarea:focus {
 
   position: relative;
 
-  background: url('../img/map.png') no-repeat center bottom;
   border-radius: 0 0 10px 10px;
+}
+
+.map {
+  background: url('../img/map.webp') no-repeat center bottom;
+}
+
+.no-webp .map {
+  background: url('../img/map.png') no-repeat center bottom;
 }
 
 .map__pins {
@@ -682,8 +702,15 @@ textarea:focus {
   vertical-align: top;
   text-indent: -1999em;
 
-  background: url('../img/social-sprite.png') no-repeat -59px -59px;
   opacity: 0.6;
+}
+
+.footer-social-item {
+  background: url('../img/social-sprite.webp') no-repeat -59px -59px;
+}
+
+.no-webp .footer-social-item {
+  background: url('../img/social-sprite.png') no-repeat -59px -59px;
 }
 
 .footer-social-item:hover {
