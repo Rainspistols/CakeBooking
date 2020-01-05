@@ -167,10 +167,7 @@ var INPUT_ADDRESS = document.querySelector('#address');
 function hideMapCards() {
   MAP_CARD.forEach((item) => item.classList.add('hidden'));
 }
-
-function showMapCards() {
-  MAP_CARD.forEach((item) => item.classList.remove('hidden'));
-}
+hideMapCards();
 
 function hideAvatars() {
   MAP_PIN.forEach((item) =>
@@ -192,12 +189,15 @@ MAP_PIN_MAIN.style.zIndex = '2';
 document.querySelector('.map__pinsoverlay').querySelector('h2').style.zIndex =
   '2';
 
-MAP_PIN_MAIN.addEventListener('mouseup', function(e) {
-  MAP.classList.remove('map--faded');
-  FIELDSETS.forEach((item) => (item.disabled = false));
-  FORM.classList.remove('notice__form--disabled');
-  showAvatars();
-});
+function activateMapAndForms() {
+  MAP_PIN_MAIN.addEventListener('mouseup', function(e) {
+    MAP.classList.remove('map--faded');
+    FIELDSETS.forEach((item) => (item.disabled = false));
+    FORM.classList.remove('notice__form--disabled');
+    showAvatars();
+  });
+}
+activateMapAndForms();
 
 function showCoordinates() {
   for (let i = 0; i < MAP_PIN.length; i++) {
@@ -205,17 +205,34 @@ function showCoordinates() {
   }
 }
 
+function onMapPin() {
+  for (let i = 1; i < MAP_PIN.length; i++) {
+    MAP_PIN[i].addEventListener('click', function() {
+      MAP_CARD[--i].classList.remove('hidden');
+    });
+  }
+}
+
+let POPUP_CLOSE = document.querySelectorAll('.popup__close');
+
+function onPopupClose() {
+  for (let i = 0; i < MAP_CARD.length; i++) {
+    POPUP_CLOSE[i].addEventListener('click', function() {
+      MAP_CARD[i].classList.add('hidden');
+    });
+  }
+}
+
+onPopupClose();
+onMapPin();
+
 function getCoordinates() {
   let elem = this.getBoundingClientRect();
   INPUT_ADDRESS.value = `${elem.x + elem.width / 2} , ${elem.y +
     pageYOffset +
     elem.height}`;
-  // INPUT_ADDRESS.value = `${this.getBoundingClientRect().x +
-  //   20} , ${this.getBoundingClientRect().y + pageYOffset + 44}`;
-  console.log(this.getBoundingClientRect(), this.width);
 }
 
 showCoordinates();
 disableForm();
-hideMapCards();
 hideAvatars();
