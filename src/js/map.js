@@ -1,12 +1,20 @@
 'use strict';
 
-var MAP_CLASS = document.querySelector('.map');
-var FIELDSETS = document.querySelectorAll('fieldset');
+var MAP = document.querySelector('.map'),
+  FIELDSETS = document.querySelectorAll('fieldset'),
+  MAP_PINS = document.querySelector('.map__pins'),
+  MAP_FILTERS_CONTAINER = MAP.querySelector('.map__filters-container');
+
+var MAP_PIN_TEMPLATE = document
+    .querySelector('template')
+    .content.querySelector('.map__pin'),
+  MAP_CARD_TEMPLATE = document
+    .querySelector('template')
+    .content.querySelector('.map__card');
 
 function disableForm() {
   FIELDSETS.forEach((item) => (item.disabled = true));
 }
-
 // random value including min and max;
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
@@ -89,74 +97,79 @@ var example = [
   },
 ];
 
-var MAP_PIN_TEMPLATE = document
-  .querySelector('template')
-  .content.querySelector('.map__pin');
-var MAP_PINS = document.querySelector('.map__pins');
+function buildTemplates() {
+  for (var i = 0; i < 8; i++) {
+    var mapPinFragment = MAP_PIN_TEMPLATE.cloneNode(true);
+    //build avatars on the map
+    mapPinFragment.style = example[0].offer.address();
+    mapPinFragment.querySelector('img').src = example[0].author.avatar(i);
+    mapPinFragment.querySelector('img').alt = example[0].offer.title[i];
+    MAP_PINS.appendChild(mapPinFragment);
 
-var MAP_CARD_TEMPLATE = document
-  .querySelector('template')
-  .content.querySelector('.map__card');
-var MAP_FILTERS_CONTAINER = MAP_CLASS.querySelector('.map__filters-container');
+    var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
 
-for (var i = 0; i < 8; i++) {
-  var mapPinFragment = MAP_PIN_TEMPLATE.cloneNode(true);
-  //build avatars on the map
-  mapPinFragment.style = example[0].offer.address();
-  mapPinFragment.querySelector('img').src = example[0].author.avatar(i);
-  mapPinFragment.querySelector('img').alt = example[0].offer.title[i];
-  MAP_PINS.appendChild(mapPinFragment);
+    var photoTitle = mapCardFragment.querySelector('h3');
+    photoTitle.classList.add('photo__title');
+    photoTitle.innerText = example[0].offer.title[i];
+    var popupPrice = mapCardFragment.querySelector('.popup__price');
+    popupPrice.classList.add('popup__text--price');
+    popupPrice.innerText = example[0].offer.price();
+    // Don't know why i need it
+    mapCardFragment
+      .querySelector('small')
+      .classList.add('popup__text--adrress');
+    mapCardFragment.querySelector(
+      'small'
+    ).innerText = example[0].offer.address();
+    // CREATED POPUP_CARDS
+    var popupType = mapCardFragment.querySelector('h4');
+    popupType.classList.add('poput__type');
+    popupType.innerText = example[0].offer.type[i];
+    mapCardFragment.querySelector('.popup__text--capacity').innerText =
+      example[0].offer.rooms() + example[0].offer.guests();
+    mapCardFragment.querySelector('.popup__text--time').innerText =
+      example[0].offer.checkin + ',' + example[0].offer.checkout;
+    var popupFeatures = mapCardFragment.querySelector('.popup__features');
+    var li = popupFeatures.querySelectorAll('li');
+    // delete random amount of ellements
+    for (var j = 0; j < getRandomIntInclusive(0, 6); j++) {
+      popupFeatures.removeChild(li[j]);
+    }
+    mapCardFragment.querySelector('.popup__description').innerText =
+      example[0].offer.description;
+    var popupPictures = mapCardFragment.querySelector('.popup__pictures');
+    var popupPicturesLi = popupPictures.querySelector('li');
+    var popupPicturesImg = popupPicturesLi.querySelector('img');
+    popupPicturesImg.width = '210';
+    popupPicturesImg.height = '210';
+    popupPictures.appendChild(popupPicturesLi.cloneNode(true));
+    popupPictures.appendChild(popupPicturesLi.cloneNode(true));
+    var popupPicturesLiAll = popupPictures.querySelectorAll('li');
+    var popupPicturesImgAll = popupPictures.querySelectorAll('img');
+    popupPicturesImgAll[2].style = 'display:none';
+    popupPicturesImgAll[1].style = 'display:none';
+    for (var j = 0; j < 3; j++) {
+      popupPicturesImgAll[j].src = example[0].offer.photos[j];
+    }
 
-  var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
-
-  var photoTitle = mapCardFragment.querySelector('h3');
-  photoTitle.classList.add('photo__title');
-  photoTitle.innerText = example[0].offer.title[i];
-  var popupPrice = mapCardFragment.querySelector('.popup__price');
-  popupPrice.classList.add('popup__text--price');
-  popupPrice.innerText = example[0].offer.price();
-  // Don't know why i need it
-  mapCardFragment.querySelector('small').classList.add('popup__text--adrress');
-  mapCardFragment.querySelector('small').innerText = example[0].offer.address();
-  // CREATED POPUP_CARDS
-  var popupType = mapCardFragment.querySelector('h4');
-  popupType.classList.add('poput__type');
-  popupType.innerText = example[0].offer.type[i];
-  mapCardFragment.querySelector('.popup__text--capacity').innerText =
-    example[0].offer.rooms() + example[0].offer.guests();
-  mapCardFragment.querySelector('.popup__text--time').innerText =
-    example[0].offer.checkin + ',' + example[0].offer.checkout;
-  var popupFeatures = mapCardFragment.querySelector('.popup__features');
-  var li = popupFeatures.querySelectorAll('li');
-  // delete random amount of ellements
-  for (var j = 0; j < getRandomIntInclusive(0, 6); j++) {
-    popupFeatures.removeChild(li[j]);
+    MAP.insertBefore(mapCardFragment, MAP_FILTERS_CONTAINER);
   }
-  mapCardFragment.querySelector('.popup__description').innerText =
-    example[0].offer.description;
-  var popupPictures = mapCardFragment.querySelector('.popup__pictures');
-  var popupPicturesLi = popupPictures.querySelector('li');
-  var popupPicturesImg = popupPicturesLi.querySelector('img');
-  popupPicturesImg.width = '210';
-  popupPicturesImg.height = '210';
-  popupPictures.appendChild(popupPicturesLi.cloneNode(true));
-  popupPictures.appendChild(popupPicturesLi.cloneNode(true));
-  var popupPicturesLiAll = popupPictures.querySelectorAll('li');
-  var popupPicturesImgAll = popupPictures.querySelectorAll('img');
-  popupPicturesImgAll[2].style = 'display:none';
-  popupPicturesImgAll[1].style = 'display:none';
-  for (var j = 0; j < 3; j++) {
-    popupPicturesImgAll[j].src = example[0].offer.photos[j];
-  }
-
-  MAP_CLASS.insertBefore(mapCardFragment, MAP_FILTERS_CONTAINER);
 }
+
+buildTemplates();
 
 var MAP_CARD = document.querySelectorAll('.map__card');
 var MAP_PIN = document.querySelectorAll('.map__pin');
+var MAP_PIN_MAIN = document.querySelector('.map__pin--main');
+var FORM = document.querySelector('.notice__form');
+var INPUT_ADDRESS = document.querySelector('#address');
 
 function hideMapCards() {
   MAP_CARD.forEach((item) => item.classList.add('hidden'));
+}
+
+function showMapCards() {
+  MAP_CARD.forEach((item) => item.classList.remove('hidden'));
 }
 
 function hideAvatars() {
@@ -175,26 +188,34 @@ function showAvatars() {
   );
 }
 
-function showMapCards() {
-  MAP_CARD.forEach((item) => item.classList.remove('hidden'));
-}
-
-var MAP_PIN_MAIN = document.querySelector('.map__pin--main');
-
 MAP_PIN_MAIN.style.zIndex = '2';
 document.querySelector('.map__pinsoverlay').querySelector('h2').style.zIndex =
   '2';
 
-MAP_PIN_MAIN.addEventListener('mouseup', function() {
-  MAP_CLASS.classList.remove('map--faded');
+MAP_PIN_MAIN.addEventListener('mouseup', function(e) {
+  MAP.classList.remove('map--faded');
   FIELDSETS.forEach((item) => (item.disabled = false));
+  FORM.classList.remove('notice__form--disabled');
   showAvatars();
 });
 
-MAP_PIN[0].addEventListener('click', function() {
-  console.log(MAP_CARD);
-});
+function showCoordinates() {
+  for (let i = 0; i < MAP_PIN.length; i++) {
+    MAP_PIN[i].addEventListener('click', getCoordinates);
+  }
+}
 
+function getCoordinates() {
+  let elem = this.getBoundingClientRect();
+  INPUT_ADDRESS.value = `${elem.x + elem.width / 2} , ${elem.y +
+    pageYOffset +
+    elem.height}`;
+  // INPUT_ADDRESS.value = `${this.getBoundingClientRect().x +
+  //   20} , ${this.getBoundingClientRect().y + pageYOffset + 44}`;
+  console.log(this.getBoundingClientRect(), this.width);
+}
+
+showCoordinates();
 disableForm();
 hideMapCards();
 hideAvatars();
