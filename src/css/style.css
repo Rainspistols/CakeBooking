@@ -373,6 +373,10 @@ textarea:focus {
   font-size: 14px;
 }
 
+.map-card__title {
+  text-transform: uppercase;
+}
+
 .popup ul {
   padding: 0;
   margin: 0;

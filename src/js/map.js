@@ -11,6 +11,7 @@ var MAP_PIN_TEMPLATE = document
   MAP_CARD_TEMPLATE = document
     .querySelector('template')
     .content.querySelector('.map__card');
+var MAP_CARD_TEMPLATE_AVATAR = MAP_CARD_TEMPLATE.querySelector('img');
 
 function disableForm() {
   FIELDSETS.forEach((item) => (item.disabled = true));
@@ -38,23 +39,20 @@ var example = [
     offer: {
       title: [
         'Large comfortable apartment',
-        'Small uncomfortable apartment',
+        'Small apartment',
         'Huge beautiful palace',
-        'Small terrible palace',
+        'Small palace',
         'Beautiful guest house',
-        'Ugly ugly little house',
-        'Cozy bungalo far from the sea',
-        'Uncomfortable bungalo by but in the water ',
+        'Little house',
+        'Bungalo far from the sea',
+        'Bungalo near the sea',
       ],
-      address: function() {
-        return (
-          'left:' +
-          getRandomIntInclusive(0 + 40, 1200 - 40) +
-          'px; top:' +
-          getRandomIntInclusive(130, 630) +
-          'px;'
-        );
-      },
+      address:
+        'left:' +
+        location.x +
+        'px; top:' +
+        location.y +
+        'px;',
       price: function() {
         return getRandomIntInclusive(1000, 1000000) + '\u0024/night';
       },
@@ -92,7 +90,10 @@ var example = [
         'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
         'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
       ],
-      location: 'location.x,location.y',
+      location: {
+        x: getRandomIntInclusive(0 + 40, 1200 - 40),
+        y: getRandomIntInclusive(130, 630),
+      },
     },
   },
 ];
@@ -100,10 +101,13 @@ var example = [
 function buildTemplates() {
   for (var i = 0; i < 8; i++) {
     var mapPinFragment = MAP_PIN_TEMPLATE.cloneNode(true);
-    //build avatars on the map
-    mapPinFragment.style = example[0].offer.address();
-    mapPinFragment.querySelector('img').src = example[0].author.avatar(i);
-    mapPinFragment.querySelector('img').alt = example[0].offer.title[i];
+    //build avatars on the map && build avatars on map card
+    mapPinFragment.style = example[0].offer.address;
+    mapPinFragment.querySelector(
+      'img'
+    ).src = MAP_CARD_TEMPLATE_AVATAR.src = example[0].author.avatar(i);
+    mapPinFragment.querySelector('img').alt = MAP_CARD_TEMPLATE_AVATAR.alt =
+      example[0].offer.title[i];
     MAP_PINS.appendChild(mapPinFragment);
 
     var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
@@ -115,12 +119,9 @@ function buildTemplates() {
     popupPrice.classList.add('popup__text--price');
     popupPrice.innerText = example[0].offer.price();
     // Don't know why i need it
-    mapCardFragment
-      .querySelector('small')
-      .classList.add('popup__text--adrress');
     mapCardFragment.querySelector(
       'small'
-    ).innerText = example[0].offer.address();
+    ).innerText = example[0].offer.address;
     // CREATED POPUP_CARDS
     var popupType = mapCardFragment.querySelector('h4');
     popupType.classList.add('poput__type');
@@ -159,7 +160,8 @@ function buildTemplates() {
 buildTemplates();
 
 var MAP_CARD = document.querySelectorAll('.map__card');
-var MAP_PIN = document.querySelectorAll('.map__pin');
+var MAP_PIN = Array.from(document.querySelectorAll('.map__pin'));
+MAP_PIN.shift();
 var MAP_PIN_MAIN = document.querySelector('.map__pin--main');
 var FORM = document.querySelector('.notice__form');
 var INPUT_ADDRESS = document.querySelector('#address');
@@ -170,19 +172,11 @@ function hideMapCards() {
 hideMapCards();
 
 function hideAvatars() {
-  MAP_PIN.forEach((item) =>
-    item.classList.contains('map__pin--main')
-      ? item
-      : item.classList.add('hidden')
-  );
+  MAP_PIN.forEach((item) => item.classList.add('hidden'));
 }
 
 function showAvatars() {
-  MAP_PIN.forEach((item) =>
-    item.classList.contains('map__pin--main')
-      ? item
-      : item.classList.remove('hidden')
-  );
+  MAP_PIN.forEach((item) => item.classList.remove('hidden'));
 }
 
 MAP_PIN_MAIN.style.zIndex = '2';
@@ -206,9 +200,14 @@ function showCoordinates() {
 }
 
 function onMapPin() {
-  for (let i = 1; i < MAP_PIN.length; i++) {
+  let currentItem;
+  for (let i = 0; i < MAP_PIN.length; i++) {
     MAP_PIN[i].addEventListener('click', function() {
-      MAP_CARD[--i].classList.remove('hidden');
+      if (currentItem) {
+        currentItem.classList.add('hidden');
+      }
+      currentItem = MAP_CARD[i];
+      currentItem.classList.remove('hidden');
     });
   }
 }
@@ -216,11 +215,18 @@ function onMapPin() {
 let POPUP_CLOSE = document.querySelectorAll('.popup__close');
 
 function onPopupClose() {
+  let currentItem;
   for (let i = 0; i < MAP_CARD.length; i++) {
     POPUP_CLOSE[i].addEventListener('click', function() {
+      currentItem = MAP_CARD[i];
       MAP_CARD[i].classList.add('hidden');
     });
   }
+  document.addEventListener('keydown', (e) => {
+    if (e.keyCode === 27) {
+      MAP_CARD.forEach((item) => item.classList.add('hidden'));
+    }
+  });
 }
 
 onPopupClose();
