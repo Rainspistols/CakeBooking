@@ -138,8 +138,6 @@ function makeUsers() {
   }
 }
 
-makeUsers();
-
 function buildTemplates() {
   for (var i = 0; i < 8; i++) {
     //build avatars on the pins && avatars on map card
@@ -153,7 +151,7 @@ function buildTemplates() {
     // build map card title
     var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
     var mapCardTitle = mapCardFragment.querySelector('.map-card__title');
-    mapCardTitle.innerText = adverts[i].title[i];
+    mapCardTitle.innerText = adverts[i].title;
     //build price
     var mapCardPrice = mapCardFragment.querySelector('.popup__price');
     mapCardPrice.innerText = adverts[i].price + '\u0024/night';
@@ -168,34 +166,35 @@ function buildTemplates() {
     mapCardFragment.querySelector(
       '.popup__text--time'
     ).innerText = `Checkin after ${adverts[i].checkin}, checkout before ${adverts[i].checkout}`;
-    // build features
-    var mapCardFeatures = mapCardFragment.querySelector('.popup__features');
-    
-    // delete random amount of ellements
-    // for (var j = 0; j < getRandomIntInclusive(0, 6); j++) {
-    //   popupFeatures.removeChild(li[j]);
-    // }
+    // BUILD FEATURES
+    var mapCardFeatures = mapCardFragment.querySelector('.popup__features'),
+      li = mapCardFeatures.querySelectorAll('li');
+    // ^^delete random amount of ellements
+    for (var j = 0; j < li.length; j++) {
+      var randomBooleen = Math.random() >= 0.5;
+      if (randomBooleen) {
+        mapCardFeatures.removeChild(li[j]);
+      }
+    }
+    // build description
     // mapCardFragment.querySelector('.popup__description').innerText =
-    //   database[0].offer.description;
-    // var popupPictures = mapCardFragment.querySelector('.popup__pictures');
-    // var popupPicturesLi = popupPictures.querySelector('li');
-    // var popupPicturesImg = popupPicturesLi.querySelector('img');
-    // popupPicturesImg.width = '210';
-    // popupPicturesImg.height = '210';
-    // popupPictures.appendChild(popupPicturesLi.cloneNode(true));
-    // popupPictures.appendChild(popupPicturesLi.cloneNode(true));
-    // var popupPicturesLiAll = popupPictures.querySelectorAll('li');
-    // var popupPicturesImgAll = popupPictures.querySelectorAll('img');
-    // popupPicturesImgAll[2].style = 'display:none';
-    // popupPicturesImgAll[1].style = 'display:none';
-    // for (var j = 0; j < 3; j++) {
-    //   popupPicturesImgAll[j].src = database[0].offer.photos[j];
-    // }
+    //   adverts[0].description;
+    // build pictures
+    var mapCardPicturesUl = mapCardFragment.querySelector('.popup__pictures'),
+      mapCardPicturesLi = mapCardPicturesUl.querySelector('li'),
+      mapCardPicturesImg = mapCardPicturesLi.querySelector('img');
+    // ^^clone right quantity of empty elements, and give them src
+    mapCardPicturesImg.src = adverts[i].photos[0];
+    for (let k = 1; k < adverts[i].photos.length; k++) {
+      mapCardPicturesUl.appendChild(mapCardPicturesLi.cloneNode(true));
+      mapCardPicturesImg.src = adverts[i].photos[k];
+    }
 
     MAP.insertBefore(mapCardFragment, MAP_FILTERS_CONTAINER);
   }
 }
 
+makeUsers();
 buildTemplates();
 
 var MAP_CARD = document.querySelectorAll('.map__card');
@@ -204,11 +203,11 @@ MAP_PIN.shift();
 var MAP_PIN_MAIN = document.querySelector('.map__pin--main');
 var FORM = document.querySelector('.notice__form');
 var INPUT_ADDRESS = document.querySelector('#address');
+var POPUP_CLOSE = document.querySelectorAll('.popup__close');
 
 function hideMapCards() {
   MAP_CARD.forEach((item) => item.classList.add('hidden'));
 }
-hideMapCards();
 
 function hideAvatars() {
   MAP_PIN.forEach((item) => item.classList.add('hidden'));
@@ -218,19 +217,16 @@ function showAvatars() {
   MAP_PIN.forEach((item) => item.classList.remove('hidden'));
 }
 
-MAP_PIN_MAIN.style.zIndex = '2';
-document.querySelector('.map__pinsoverlay').querySelector('h2').style.zIndex =
-  '2';
-
-function activateMapAndForms() {
-  MAP_PIN_MAIN.addEventListener('mouseup', function(e) {
+function onMainMapPin() {
+  MAP_PIN_MAIN.addEventListener('mouseup', function() {
     MAP.classList.remove('map--faded');
     FIELDSETS.forEach((item) => (item.disabled = false));
     FORM.classList.remove('notice__form--disabled');
     showAvatars();
   });
+  // ANDREW how to use add getCoordinates() in previous event listener?
+  MAP_PIN_MAIN.addEventListener('click', getCoordinates);
 }
-activateMapAndForms();
 
 function showCoordinates() {
   for (var i = 0; i < MAP_PIN.length; i++) {
@@ -238,24 +234,42 @@ function showCoordinates() {
   }
 }
 
+function getCoordinates() {
+  var elem = this.getBoundingClientRect();
+  var bigMark = 22;
+  var smallMark = 18;
+  INPUT_ADDRESS.value =
+    this == MAP_PIN_MAIN
+      ? `${elem.x + elem.width / 2} , ${elem.y +
+          pageYOffset +
+          elem.height +
+          bigMark}`
+      : `${elem.x + elem.width / 2} , ${elem.y +
+          pageYOffset +
+          elem.height +
+          smallMark}`;
+          console.log(elem);
+  // INPUT_ADDRESS.value = `${elem.x + elem.width / 2} , ${elem.y +
+  //   pageYOffset +
+  //   elem.height}`;
+}
+
 function onMapPin() {
-  var currentItem;
-  for (var i = 0; i < MAP_PIN.length; i++) {
+  let lastItem = false;
+  for (let i = 0; i < MAP_PIN.length; i++) {
     MAP_PIN[i].addEventListener('click', function() {
-      if (currentItem) {
-        currentItem.classList.add('hidden');
+      if (lastItem) {
+        lastItem.classList.add('hidden');
       }
-      currentItem = MAP_CARD[i];
-      currentItem.classList.remove('hidden');
+      lastItem = MAP_CARD[i];
+      MAP_CARD[i].classList.remove('hidden');
     });
   }
 }
 
-var POPUP_CLOSE = document.querySelectorAll('.popup__close');
-
-function onPopupClose() {
+function onMapCardClose() {
   var currentItem;
-  for (var i = 0; i < MAP_CARD.length; i++) {
+  for (let i = 0; i < MAP_CARD.length; i++) {
     POPUP_CLOSE[i].addEventListener('click', function() {
       currentItem = MAP_CARD[i];
       MAP_CARD[i].classList.add('hidden');
@@ -268,16 +282,10 @@ function onPopupClose() {
   });
 }
 
-onPopupClose();
+onMainMapPin();
 onMapPin();
-
-function getCoordinates() {
-  var elem = this.getBoundingClientRect();
-  INPUT_ADDRESS.value = `${elem.x + elem.width / 2} , ${elem.y +
-    pageYOffset +
-    elem.height}`;
-}
-
+onMapCardClose();
+hideMapCards();
 showCoordinates();
 disableForm();
 hideAvatars();

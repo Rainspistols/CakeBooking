@@ -212,8 +212,8 @@ textarea:focus {
 }
 
 .map__pin {
-  width: 40px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
 
   padding: 0;
   margin: 0;
@@ -236,8 +236,8 @@ textarea:focus {
   content: '';
 
   position: absolute;
-  left: 50%;
-  top: 100%;
+  left: calc(50% - 3px);
+  top: calc(100% + 6px);
 
   width: 0;
   height: 0;
@@ -245,6 +245,7 @@ textarea:focus {
   border: solid 5px transparent;
   border-top: solid 18px #fff;
   border-bottom: 0;
+  transform: translateY(-50%);
 }
 
 .map__pin:active {
@@ -268,6 +269,7 @@ textarea:focus {
   height: 65px;
 
   cursor: move;
+  z-index: 2;
 }
 
 .map__pin--main img {
@@ -305,7 +307,9 @@ textarea:focus {
   border-top-color: #ff5635;
   border-top-width: 22px;
 
-  transform: translate(-50%, -5px);
+  top: calc(100% - 5px);
+  left: 50%;
+  transform: translateX(-50%);
   transition: transform 300ms ease-in;
 }
 
@@ -388,6 +392,10 @@ textarea:focus {
   margin: 0;
 }
 
+.popup .popup__features li {
+  margin: 0 2px;
+}
+
 .popup p,
 .popup ul {
   margin-top: 0;
@@ -407,6 +415,7 @@ textarea:focus {
   position: absolute;
   bottom: 100%;
   margin-bottom: 10px;
+  border-radius: 20px;
 }
 
 .popup__close {
@@ -440,6 +449,13 @@ textarea:focus {
 
   line-height: 40px;
   text-indent: 0;
+}
+
+.popup__price {
+  font-size: 24px;
+  line-height: 20px;
+  font-weight: bold;
+  margin: 0;
 }
 
 .map__filters-container {
