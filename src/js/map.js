@@ -4,13 +4,6 @@ var MAP = document.querySelector('.map'),
   FIELDSETS = document.querySelectorAll('fieldset'),
   MAP_PINS_BLOCK = document.querySelector('.map__pins'),
   MAP_FILTERS_CONTAINER = MAP.querySelector('.map__filters-container');
-var MAP_PIN_TEMPLATE = document
-    .querySelector('template')
-    .content.querySelector('.map__pin'),
-  MAP_CARD_TEMPLATE = document
-    .querySelector('template')
-    .content.querySelector('.map__card');
-var MAP_CARD_TEMPLATE_AVATAR = MAP_CARD_TEMPLATE.querySelector('img');
 var pinSize = 40;
 var mapSize = 1200;
 var adverts = [];
@@ -81,6 +74,9 @@ var database = [
   },
 ];
 
+function disableForm() {
+  FIELDSETS.forEach((item) => (item.disabled = true));
+}
 // random value including min and max;
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
@@ -109,10 +105,6 @@ function shuffle(arr) {
   return arr;
 }
 
-function disableForm() {
-  FIELDSETS.forEach((item) => (item.disabled = true));
-}
-
 function User(name, i) {
   this.name = name;
   this.avatarPath = database[0].author.avatar(i);
@@ -138,35 +130,47 @@ function makeUsers() {
   }
 }
 
-function buildTemplates() {
-  for (var i = 0; i < 8; i++) {
-    //build avatars on the pins && avatars on map card
+function renderTemplates() {
+  var MAP_PIN_TEMPLATE = document
+      .querySelector('template')
+      .content.querySelector('.map__pin');
+  var  MAP_CARD_TEMPLATE = document
+      .querySelector('template')
+      .content.querySelector('.map__card'),
+    MAP_CARD_TEMPLATE_AVATAR = MAP_CARD_TEMPLATE.querySelector('img');
+  function renderCards(i) {
+    var mapCardTitle = mapCardFragment.querySelector('.map-card__title');
+    mapCardTitle.innerText = adverts[i].title;
+  }
+  function renderAvatars(i) {
     var mapPinFragment = MAP_PIN_TEMPLATE.cloneNode(true);
+
     mapPinFragment.style = `left: ${adverts[i].location.x}px; top: ${adverts[i].location.y}px;`;
     mapPinFragment.querySelector('img').src = MAP_CARD_TEMPLATE_AVATAR.src =
       adverts[i].avatarPath;
     mapPinFragment.querySelector('img').alt = MAP_CARD_TEMPLATE_AVATAR.alt =
       adverts[i].title;
     MAP_PINS_BLOCK.appendChild(mapPinFragment);
-    // build map card title
-    var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
-    var mapCardTitle = mapCardFragment.querySelector('.map-card__title');
-    mapCardTitle.innerText = adverts[i].title;
-    //build price
+  }
+  function setPrice(i) {
     var mapCardPrice = mapCardFragment.querySelector('.popup__price');
     mapCardPrice.innerText = adverts[i].price + '\u0024/night';
-    // build type
+  }
+  function setAppartmentType(i) {
     var mapCardType = mapCardFragment.querySelector('.popup__type');
     mapCardType.innerText = adverts[i].type;
-    // build guests and rooms
+  }
+  function setGuestsRooms(i) {
     mapCardFragment.querySelector(
       '.popup__text--capacity'
     ).innerText = `${adverts[i].rooms} room(s) for ${adverts[i].guests} guest(s)`;
-    // build checkin and checkout
+  }
+  function setCheckinCheckout(i) {
     mapCardFragment.querySelector(
       '.popup__text--time'
     ).innerText = `Checkin after ${adverts[i].checkin}, checkout before ${adverts[i].checkout}`;
-    // BUILD FEATURES
+  }
+  function setFeatures() {
     var mapCardFeatures = mapCardFragment.querySelector('.popup__features'),
       li = mapCardFeatures.querySelectorAll('li');
     // ^^delete random amount of ellements
@@ -176,10 +180,8 @@ function buildTemplates() {
         mapCardFeatures.removeChild(li[j]);
       }
     }
-    // build description
-    // mapCardFragment.querySelector('.popup__description').innerText =
-    //   adverts[0].description;
-    // build pictures
+  }
+  function renderCardPictures(i) {
     var mapCardPicturesUl = mapCardFragment.querySelector('.popup__pictures'),
       mapCardPicturesLi = mapCardPicturesUl.querySelector('li'),
       mapCardPicturesImg = mapCardPicturesLi.querySelector('img');
@@ -189,13 +191,24 @@ function buildTemplates() {
       mapCardPicturesUl.appendChild(mapCardPicturesLi.cloneNode(true));
       mapCardPicturesImg.src = adverts[i].photos[k];
     }
+  }
 
+  for (var i = 0; i < adverts.length; i++) {
+    renderAvatars(i);
+    var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
+    renderCards(i);
+    setPrice(i);
+    setAppartmentType(i);
+    setGuestsRooms(i);
+    setCheckinCheckout(i);
+    setFeatures();
+    renderCardPictures(i);
     MAP.insertBefore(mapCardFragment, MAP_FILTERS_CONTAINER);
   }
 }
 
 makeUsers();
-buildTemplates();
+renderTemplates();
 
 var MAP_CARD = document.querySelectorAll('.map__card');
 var MAP_PIN = Array.from(document.querySelectorAll('.map__pin'));
@@ -218,20 +231,14 @@ function showAvatars() {
 }
 
 function onMainMapPin() {
-  MAP_PIN_MAIN.addEventListener('mouseup', function() {
+  MAP_PIN_MAIN.addEventListener('click', function() {
     MAP.classList.remove('map--faded');
     FIELDSETS.forEach((item) => (item.disabled = false));
     FORM.classList.remove('notice__form--disabled');
     showAvatars();
   });
   // ANDREW how to use add getCoordinates() in previous event listener?
-  MAP_PIN_MAIN.addEventListener('click', getCoordinates);
-}
-
-function showCoordinates() {
-  for (var i = 0; i < MAP_PIN.length; i++) {
-    MAP_PIN[i].addEventListener('click', getCoordinates);
-  }
+  MAP_PIN_MAIN.addEventListener('mouseup', getCoordinates);
 }
 
 function getCoordinates() {
@@ -248,10 +255,6 @@ function getCoordinates() {
           pageYOffset +
           elem.height +
           smallMark}`;
-          console.log(elem);
-  // INPUT_ADDRESS.value = `${elem.x + elem.width / 2} , ${elem.y +
-  //   pageYOffset +
-  //   elem.height}`;
 }
 
 function onMapPin() {
@@ -263,7 +266,10 @@ function onMapPin() {
       }
       lastItem = MAP_CARD[i];
       MAP_CARD[i].classList.remove('hidden');
+
+
     });
+    MAP_PIN[i].addEventListener('click', getCoordinates);
   }
 }
 
@@ -286,6 +292,5 @@ onMainMapPin();
 onMapPin();
 onMapCardClose();
 hideMapCards();
-showCoordinates();
 disableForm();
 hideAvatars();
