@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function() {
   var MAP = document.querySelector('.map'),
     FIELDSETS = document.querySelectorAll('fieldset'),
     MAP_PINS_BLOCK = document.querySelector('.map__pins'),
@@ -139,11 +139,11 @@
         .querySelector('template')
         .content.querySelector('.map__card'),
       MAP_CARD_TEMPLATE_AVATAR = MAP_CARD_TEMPLATE.querySelector('img');
-    function renderCards(i) {
+    function renderCards() {
       var mapCardTitle = mapCardFragment.querySelector('.map-card__title');
       mapCardTitle.innerText = adverts[i].title;
     }
-    function renderAvatars(i) {
+    function renderAvatars() {
       var mapPinFragment = MAP_PIN_TEMPLATE.cloneNode(true);
 
       mapPinFragment.style = `left: ${adverts[i].location.x}px; top: ${adverts[i].location.y}px;`;
@@ -153,20 +153,20 @@
         adverts[i].title;
       MAP_PINS_BLOCK.appendChild(mapPinFragment);
     }
-    function setPrice(i) {
+    function setPrice() {
       var mapCardPrice = mapCardFragment.querySelector('.popup__price');
       mapCardPrice.innerText = adverts[i].price + '\u0024/night';
     }
-    function setAppartmentType(i) {
+    function setAppartmentType() {
       var mapCardType = mapCardFragment.querySelector('.popup__type');
       mapCardType.innerText = adverts[i].type;
     }
-    function setGuestsRooms(i) {
+    function setGuestsRooms() {
       mapCardFragment.querySelector(
         '.popup__text--capacity'
       ).innerText = `${adverts[i].rooms} room(s) for ${adverts[i].guests} guest(s)`;
     }
-    function setCheckinCheckout(i) {
+    function setCheckinCheckout() {
       mapCardFragment.querySelector(
         '.popup__text--time'
       ).innerText = `Checkin after ${adverts[i].checkin}, checkout before ${adverts[i].checkout}`;
@@ -182,7 +182,7 @@
         }
       }
     }
-    function renderCardPictures(i) {
+    function renderCardPictures() {
       var mapCardPicturesUl = mapCardFragment.querySelector('.popup__pictures'),
         mapCardPicturesLi = mapCardPicturesUl.querySelector('li'),
         mapCardPicturesImg = mapCardPicturesLi.querySelector('img');
@@ -193,17 +193,16 @@
         mapCardPicturesImg.src = adverts[i].photos[k];
       }
     }
-
     for (var i = 0; i < adverts.length; i++) {
-      renderAvatars(i);
+      renderAvatars();
       var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
-      renderCards(i);
-      setPrice(i);
-      setAppartmentType(i);
-      setGuestsRooms(i);
-      setCheckinCheckout(i);
+      renderCards();
+      setPrice();
+      setAppartmentType();
+      setGuestsRooms();
+      setCheckinCheckout();
       setFeatures();
-      renderCardPictures(i);
+      renderCardPictures();
       MAP.insertBefore(mapCardFragment, MAP_FILTERS_CONTAINER);
     }
   }
