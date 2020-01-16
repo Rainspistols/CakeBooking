@@ -307,7 +307,7 @@ textarea:focus {
   border-top-color: #ff5635;
   border-top-width: 22px;
 
-  top: calc(100% - 5px);
+  top: calc(100% - 6px);
   left: 50%;
   transform: translateX(-50%);
   transition: transform 300ms ease-in;

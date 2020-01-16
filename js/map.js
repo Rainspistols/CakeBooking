@@ -78,58 +78,6 @@
   function disableForm() {
     FIELDSETS.forEach((item) => (item.disabled = true));
   }
-  // // random value including min and max;
-  // function getRandomIntInclusive(min, max) {
-  //   min = Math.ceil(min);
-  //   max = Math.floor(max);
-  //   return Math.floor(Math.random() * (max - min + 1)) + min;
-  // }
-  // // random item in Array
-  // function getRandomArrItem(arr) {
-  //   var random = Math.floor(Math.random() * arr.length);
-  //   return arr[random];
-  // }
-  // // random arr length
-  // function getRandomArrLength(arr) {
-  //   arr.splice(getRandomIntInclusive(1, arr.length));
-  //   return arr;
-  // }
-  // // shuffle arr
-  // function shuffle(arr) {
-  //   var j, temp;
-  //   for (var i = arr.length - 1; i > 0; i--) {
-  //     j = Math.floor(Math.random() * (i + 1));
-  //     temp = arr[j];
-  //     arr[j] = arr[i];
-  //     arr[i] = temp;
-  //   }
-  //   return arr;
-  // }
-
-  // function User(name, i) {
-  //   this.name = name;
-  //   this.avatarPath = database[0].author.avatar(i);
-  //   this.title = database[0].offer.title[i];
-  //   this.price = database[0].offer.price();
-  //   this.type = database[0].offer.type();
-  //   this.rooms = database[0].offer.rooms();
-  //   this.guests = database[0].offer.guests();
-  //   this.checkin = database[0].offer.checkin();
-  //   this.checkout = database[0].offer.checkout();
-  //   this.features = database[0].offer.features();
-  //   this.description = database[0].offer.description;
-  //   this.photos = database[0].offer.photos();
-  //   this.location = {};
-  //   this.location.x = database[0].offer.location.x();
-  //   this.location.y = database[0].offer.location.y();
-  //   this.address = this.location.x + ' , ' + this.location.y;
-  // }
-
-  // function makeUsers() {
-  //   for (let i = 0; i < 8; i++) {
-  //     adverts.push(new User('user' + (i + 1), i));
-  //   }
-  // }
 
   function renderTemplates() {
     var MAP_PIN_TEMPLATE = document
@@ -207,7 +155,6 @@
     }
   }
 
-  makeUsers();
   renderTemplates();
 
   var MAP_CARD = document.querySelectorAll('.map__card');

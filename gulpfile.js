@@ -26,7 +26,7 @@ const CONFIG = {
     base: './docs/',
     images: './docs/img/',
     favicon: './docs/',
-    js: './js/',
+    js: './docs/js/',
   },
 };
 
