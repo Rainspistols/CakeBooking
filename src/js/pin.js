@@ -32,12 +32,38 @@
     MAP_PIN.forEach((item) => item.classList.remove('hidden'));
   }
   function onMainMapPin() {
-    MAP_PIN_MAIN.addEventListener('click', function() {
+    MAP_PIN_MAIN.addEventListener('mousedown', function(e) {
+      e.preventDefault();
       window.card.MAP.classList.remove('map--faded');
       window.card.FIELDSETS.forEach((item) => (item.disabled = false));
       FORM.classList.remove('notice__form--disabled');
       showAvatars();
+      var startCoords = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      function onMouseMove(e) {
+        e.preventDefault();
+        var shift = {
+          x: startCoords.x - e.clientX,
+          y: startCoords.y - e.clientY,
+        };
+        startCoords = {
+          x: e.clientX,
+          y: e.clientY,
+        };
+        MAP_PIN_MAIN.style.top = MAP_PIN_MAIN.offsetTop - shift.y + 'px';
+        MAP_PIN_MAIN.style.left = MAP_PIN_MAIN.offsetLeft - shift.x + 'px';
+      }
+      function onMouseUp(e) {
+        e.preventDefault();
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mousemove', onMouseUp);
+      }
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
     });
+
     // ANDREW how to use add getCoordinates() in previous event listener?
     MAP_PIN_MAIN.addEventListener('mouseup', getCoordinates);
   }
