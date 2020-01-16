@@ -1,68 +1,74 @@
-const { watch, src, dest, series, parallel } = require("gulp");
-const browserSync = require("browser-sync").create();
-const uglify = require("gulp-uglify");
-const rename = require("gulp-rename");
-const del = require("del");
-const postcss = require("gulp-postcss");
-const sass = require("gulp-sass");
-const autoprefixer = require("autoprefixer");
-const cssnano = require("cssnano");
-const webpackStream = require("webpack-stream");
-const htmlmin = require("gulp-htmlmin");
-const imagemin = require("gulp-imagemin");
-const webp = require("imagemin-webp");
-const extReplace = require("gulp-ext-replace");
+const { watch, src, dest, series, parallel } = require('gulp');
+const browserSync = require('browser-sync').create();
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const del = require('del');
+const postcss = require('gulp-postcss');
+const sass = require('gulp-sass');
+const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
+const webpackStream = require('webpack-stream');
+const htmlmin = require('gulp-htmlmin');
+const imagemin = require('gulp-imagemin');
+const webp = require('imagemin-webp');
+const extReplace = require('gulp-ext-replace');
 
 const CONFIG = {
   src: {
-    js: ["./src/js/**/*.js"],
-    css: "./src/css/**/*.css",
-    images: "./src/img/**/*.*",
-    html: "./src/**/*.html",
-    pngJpeg: "./src/img/*.{jpg,png}",
-    favicon: "./src/favicon.ico"
+    js: ['./src/js/**/*.js'],
+    css: './src/css/**/*.css',
+    images: './src/img/**/*.*',
+    html: './src/**/*.html',
+    pngJpeg: './src/img/*.{jpg,png}',
+    favicon: './src/favicon.ico',
   },
   docs: {
-    base: "./docs/",
-    images: "./docs/img/",
-    favicon: "./docs/"
-  }
+    base: './docs/',
+    images: './docs/img/',
+    favicon: './docs/',
+    js: './js/',
+  },
 };
 
 function cssTask(done) {
   src(CONFIG.src.css)
-    .pipe(rename({ suffix: ".bundle" }))
+    .pipe(rename({ suffix: '.bundle' }))
     .pipe(postcss([autoprefixer(), cssnano()]))
     .pipe(dest(CONFIG.docs.base));
 
   done();
 }
 
-function jsTask(done) {
-  src(CONFIG.src.js)
-    .pipe(
-      webpackStream({
-        output: {
-          filename: "main.js"
-        },
-        module: {
-          rules: [
-            {
-              test: /\.(js)$/,
-              exclude: /(node_modules)/,
-              loader: "babel-loader",
-              query: {
-                presets: ["@babel/preset-env"]
-              }
-            }
-          ]
-        }
-      })
-    )
-    .pipe(rename({ suffix: ".bundle" }))
-    .pipe(uglify())
-    .pipe(dest(CONFIG.docs.base));
+// function jsTask(done) {
+//   src(CONFIG.src.js)
+//     .pipe(
+//       webpackStream({
+//         output: {
+//           filename: 'main.js',
+//         },
+//         module: {
+//           rules: [
+//             {
+//               test: /\.(js)$/,
+//               exclude: /(node_modules)/,
+//               loader: 'babel-loader',
+//               query: {
+//                 presets: ['@babel/preset-env'],
+//               },
+//             },
+//           ],
+//         },
+//       })
+//     )
+//     .pipe(rename({ suffix: '.bundle' }))
+//     .pipe(uglify())
+//     .pipe(dest(CONFIG.docs.base));
 
+//   done();
+// }
+
+function jsTaskModules(done) {
+  src(CONFIG.src.js).pipe(dest(CONFIG.docs.js));
   done();
 }
 
@@ -85,11 +91,11 @@ function imagesTaskWebp(done) {
     .pipe(
       imagemin([
         webp({
-          quality: 75
-        })
+          quality: 75,
+        }),
       ])
     )
-    .pipe(extReplace(".webp"))
+    .pipe(extReplace('.webp'))
     .pipe(dest(CONFIG.docs.images));
   done();
 }
@@ -97,8 +103,8 @@ function imagesTaskWebp(done) {
 function liveReload(done) {
   browserSync.init({
     server: {
-      baseDir: CONFIG.docs.base
-    }
+      baseDir: CONFIG.docs.base,
+    },
   });
   done();
 }
@@ -120,14 +126,14 @@ function favicon(done) {
 function watchChanges() {
   watch(CONFIG.src.css, series(cssTask, reload));
   watch(CONFIG.src.html, series(templateTask, reload));
-  watch(CONFIG.src.js, series(jsTask, reload));
+  watch(CONFIG.src.js, series(jsTaskModules, reload));
   watch(CONFIG.src.images, series(imagesTask, reload));
   watch(CONFIG.src.favicon, series(favicon, reload));
 }
 
 exports.clean = cleanUp;
 exports.dev = parallel(
-  jsTask,
+  jsTaskModules,
   cssTask,
   templateTask,
   imagesTask,
@@ -138,5 +144,12 @@ exports.dev = parallel(
 );
 exports.build = series(
   cleanUp,
-  parallel(jsTask, cssTask, imagesTask, imagesTaskWebp, templateTask, favicon)
+  parallel(
+    jsTaskModules,
+    cssTask,
+    imagesTask,
+    imagesTaskWebp,
+    templateTask,
+    favicon
+  )
 );
