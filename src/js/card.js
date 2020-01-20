@@ -1,9 +1,8 @@
 'use strict';
 
-(function() {
+function makeCards() {
   window.card = {
     MAP: document.querySelector('.map'),
-    FIELDSETS: document.querySelectorAll('fieldset'),
   };
   function buildCards() {
     var MAP_FILTERS_CONTAINER = document.querySelector(
@@ -15,30 +14,35 @@
 
     function renderAvatars(i) {
       var MAP_CARD_TEMPLATE_AVATAR = mapCardFragment.querySelector('img');
-      MAP_CARD_TEMPLATE_AVATAR.src = window.data.adverts[i].avatarPath;
-      MAP_CARD_TEMPLATE_AVATAR.alt = window.data.adverts[i].title;
+      MAP_CARD_TEMPLATE_AVATAR.src = window.advertsData[i].author.avatar;
+      MAP_CARD_TEMPLATE_AVATAR.alt = window.advertsData[i].offer.title;
     }
     function renderCards(i) {
       var mapCardTitle = mapCardFragment.querySelector('.map-card__title');
-      mapCardTitle.innerText = window.data.adverts[i].title;
+      mapCardTitle.innerText = window.advertsData[i].offer.title;
+    }
+    function setAdrress(i) {
+      var mapCardAddress = mapCardFragment.querySelector('.map-card__address');
+      mapCardAddress.innerText = window.advertsData[i].offer.address;
     }
     function setPrice(i) {
       var mapCardPrice = mapCardFragment.querySelector('.popup__price');
-      mapCardPrice.innerText = window.data.adverts[i].price + '\u0024/night';
+      mapCardPrice.innerText =
+        window.advertsData[i].offer.price + '\u20BD/night';
     }
     function setAppartmentType(i) {
       var mapCardType = mapCardFragment.querySelector('.popup__type');
-      mapCardType.innerText = window.data.adverts[i].type;
+      mapCardType.innerText = window.advertsData[i].offer.type;
     }
     function setGuestsRooms(i) {
       mapCardFragment.querySelector(
         '.popup__text--capacity'
-      ).innerText = `${window.data.adverts[i].rooms} room(s) for ${window.data.adverts[i].guests} guest(s)`;
+      ).innerText = `${window.advertsData[i].offer.rooms} room(s) for ${window.advertsData[i].offer.guests} guest(s)`;
     }
     function setCheckinCheckout(i) {
       mapCardFragment.querySelector(
         '.popup__text--time'
-      ).innerText = `Checkin after ${window.data.adverts[i].checkin}, checkout before ${window.data.adverts[i].checkout}`;
+      ).innerText = `Checkin after ${window.advertsData[i].offer.checkin}, checkout before ${window.advertsData[i].offer.checkout}`;
     }
     function setFeatures(i) {
       var mapCardFeatures = mapCardFragment.querySelector('.popup__features'),
@@ -56,22 +60,30 @@
         mapCardPicturesLi = mapCardPicturesUl.querySelector('li'),
         mapCardPicturesImg = mapCardPicturesLi.querySelector('img');
       // ^^clone right quantity of empty elements, and give them src
-      mapCardPicturesImg.src = window.data.adverts[i].photos[0];
-      for (let k = 1; k < window.data.adverts[i].photos.length; k++) {
+      mapCardPicturesImg.src = window.advertsData[i].offer.photos[0];
+      for (let k = 1; k < window.advertsData[i].offer.photos; k++) {
         mapCardPicturesUl.appendChild(mapCardPicturesLi.cloneNode(true));
-        mapCardPicturesImg.src = window.data.adverts[i].photos[k];
+        mapCardPicturesImg.src = window.advertsData[i].photos[k];
       }
     }
-    for (let i = 0; i < window.data.adverts.length; i++) {
+    function setDesctiption(i) {
+      var mapCardDescription = mapCardFragment.querySelector(
+        '.popup__description'
+      );
+      mapCardDescription.innerText = window.advertsData[i].offer.description;
+    }
+    for (let i = 0; i < window.advertsData.length; i++) {
       var mapCardFragment = MAP_CARD_TEMPLATE.cloneNode(true);
       renderAvatars(i);
       renderCards(i);
+      setAdrress(i);
       setPrice(i);
       setAppartmentType(i);
       setGuestsRooms(i);
       setCheckinCheckout(i);
       setFeatures(i);
       renderCardPictures(i);
+      setDesctiption(i);
       window.card.MAP.insertBefore(mapCardFragment, MAP_FILTERS_CONTAINER);
     }
   }
@@ -101,4 +113,4 @@
 
   hideMapCards();
   onMapCardClose();
-})();
+}

@@ -1,19 +1,19 @@
 'use strict';
 
-(function() {
+function pin() {
   var MAP_PIN_TEMPLATE = document
     .querySelector('template')
     .content.querySelector('.map__pin');
   var MAP_PINS_BLOCK = document.querySelector('.map__pins');
 
   function renderPins() {
-    for (let i = 0; i < window.data.adverts.length; i++) {
+    for (let i = 0; i < window.advertsData.length; i++) {
       var mapPinFragment = MAP_PIN_TEMPLATE.cloneNode(true);
 
-      mapPinFragment.style = `left: ${window.data.adverts[i].location.x}px; top: ${window.data.adverts[i].location.y}px;`;
+      mapPinFragment.style = `left: ${window.advertsData[i].location.x}px; top: ${window.advertsData[i].location.y}px;`;
       mapPinFragment.querySelector('img').src =
-        window.data.adverts[i].avatarPath;
-      mapPinFragment.querySelector('img').alt = window.data.adverts[i].title;
+        window.advertsData[i].author.avatar;
+      mapPinFragment.querySelector('img').alt = window.advertsData[i].offer.title;
       MAP_PINS_BLOCK.appendChild(mapPinFragment);
     }
   }
@@ -35,7 +35,7 @@
     MAP_PIN_MAIN.addEventListener('mousedown', function(e) {
       e.preventDefault();
       window.card.MAP.classList.remove('map--faded');
-      window.card.FIELDSETS.forEach((item) => (item.disabled = false));
+      window.form.FIELDSETS.forEach((item) => (item.disabled = false));
       FORM.classList.remove('notice__form--disabled');
       showAvatars();
       var startCoords = {
@@ -95,4 +95,4 @@
   hideAvatars();
   onMainMapPin();
   onMapPin();
-})();
+}
