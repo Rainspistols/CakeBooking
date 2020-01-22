@@ -22,6 +22,7 @@
         newDiv.style.border = '30px solid lightblue';
         newDiv.style.display = 'flex';
         newDiv.style.alignItems = 'center';
+        newDiv.style.textAlign = 'center';
         newDiv.style.justifyContent = 'center';
         newDiv.style.fontSize = '20px';
         newDiv.style.fontWeight = 'bold';
