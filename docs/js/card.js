@@ -3,6 +3,7 @@
 function makeCards() {
   window.card = {
     MAP: document.querySelector('.map'),
+    ESC_KEYCODE: 27,
   };
 
   function buildCards() {
@@ -88,7 +89,6 @@ function makeCards() {
       window.card.MAP.insertBefore(mapCardFragment, Map.filtersContainer);
     }
   }
-
   buildCards();
 
   window.card.MAP_CARD = document.querySelectorAll('.map__card');
@@ -96,8 +96,8 @@ function makeCards() {
   function hideMapCards() {
     window.card.MAP_CARD.forEach((item) => item.classList.add('hidden'));
   }
-  var POPUP_CLOSE = document.querySelectorAll('.popup__close');
   function onMapCardClose() {
+    var POPUP_CLOSE = document.querySelectorAll('.popup__close');
     var currentItem;
     for (let i = 0; i < window.card.MAP_CARD.length; i++) {
       POPUP_CLOSE[i].addEventListener('click', function() {
@@ -106,7 +106,7 @@ function makeCards() {
       });
     }
     document.addEventListener('keydown', (e) => {
-      if (e.keyCode === 27) {
+      if (e.keyCode === window.card.ESC_KEYCODE) {
         window.card.MAP_CARD.forEach((item) => item.classList.add('hidden'));
       }
     });

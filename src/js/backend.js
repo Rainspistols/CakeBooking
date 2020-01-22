@@ -6,7 +6,10 @@
     console.log('Success 200', window.advertsData);
     cbpins();
     cbcards();
-  }
+  };
+  function onError(message) {
+    console.error(message);
+  };
   var statusListMap = {
     '400': 'Invalid request 400',
     '401': 'User not authorized 401',
@@ -18,7 +21,7 @@
     xhr.onload = () => {
       var error;
       if (xhr.status === 200) {
-        onLoad(xhr.response, window.pin, window.makeCards);
+        onLoad(xhr.response, window.makePins, window.makeCards);
       } else {
         error =
           statusListMap[xhr.status] ||
@@ -29,9 +32,7 @@
     return xhr;
   }
   window.backend = {
-    onError(message) {
-      console.error(message);
-    },
+
     getData(onLoad, onError) {
       var xhr = createAndCheckRequest(onLoad, onError)
       xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
@@ -44,5 +45,5 @@
     },
   };
 
-  window.backend.getData(onLoadGet, window.backend.onError);
+  window.backend.getData(onLoadGet, onError);
 })();

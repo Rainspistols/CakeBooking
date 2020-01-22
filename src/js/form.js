@@ -40,15 +40,12 @@
       }
       createDivError();
     }
+    function onLoad() {
+      form.reset();
+    }
     var form = document.querySelector('.notice__form');
     form.addEventListener('submit', (e) => {
-      window.backend.sendData(
-        new FormData(form),
-        function() {
-          form.reset();
-        },
-        onError
-      );
+      window.backend.sendData(new FormData(form), onLoad, onError);
       e.preventDefault();
     });
   }
