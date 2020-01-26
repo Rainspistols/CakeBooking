@@ -43,7 +43,5 @@
     },
   };
 
-  
-
   window.backend.getData(onLoadGet, onError);
 })();

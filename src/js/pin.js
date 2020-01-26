@@ -22,7 +22,10 @@ function makePins() {
       } else pinFragment.dataset.price = 'middle';
       pinFragment.dataset.rooms = data[i].offer.rooms;
       pinFragment.dataset.guests = data[i].offer.guests;
-      pinFragment.dataset.features = data[i].offer.features;
+      for (let q = 0; q < data[i].offer.features.length; q++) {
+        var featuresName = data[i].offer.features[q];
+        pinFragment.dataset[`${featuresName}`] = featuresName;
+      }
       pinFragment.querySelector('img').src = data[i].author.avatar;
       pinFragment.querySelector('img').alt = data[i].offer.title;
       Map.pinsBlock.appendChild(pinFragment);
