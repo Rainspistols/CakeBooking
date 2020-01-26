@@ -1,15 +1,14 @@
 'use strict';
 
 (function() {
-  function onLoadGet(data, cbpins, cbcards) {
+  function onLoadGet(data, cbpins) {
     window.advertsData = data;
     console.log('Success 200', window.advertsData);
     cbpins();
-    cbcards();
-  };
+  }
   function onError(message) {
     console.error(message);
-  };
+  }
   var statusListMap = {
     '400': 'Invalid request 400',
     '401': 'User not authorized 401',
@@ -32,9 +31,8 @@
     return xhr;
   }
   window.backend = {
-
     getData(onLoad, onError) {
-      var xhr = createAndCheckRequest(onLoad, onError)
+      var xhr = createAndCheckRequest(onLoad, onError);
       xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
       xhr.send();
     },
@@ -44,6 +42,8 @@
       xhr.send(data);
     },
   };
+
+  
 
   window.backend.getData(onLoadGet, onError);
 })();

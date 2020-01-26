@@ -9,18 +9,26 @@ function makePins() {
         .content.querySelector('.map__pin'),
     },
   };
-  function renderPins() {
-    for (let i = 0; i < window.advertsData.length; i++) {
+  window.renderPins = function(data) {
+    for (let i = 0; i < data.length; i++) {
       var pinFragment = Map.Pin.template.cloneNode(true);
 
-      pinFragment.style = `left: ${window.advertsData[i].location.x}px; top: ${window.advertsData[i].location.y}px;`;
-      pinFragment.querySelector('img').src =
-        window.advertsData[i].author.avatar;
-      pinFragment.querySelector('img').alt = window.advertsData[i].offer.title;
+      pinFragment.style = `left: ${data[i].location.x}px; top: ${data[i].location.y}px;`;
+      pinFragment.dataset.type = data[i].offer.type;
+      if (data[i].offer.price < 10000) {
+        pinFragment.dataset.price = 'low';
+      } else if (data[i].offer.price > 50000) {
+        pinFragment.dataset.price = 'high';
+      } else pinFragment.dataset.price = 'middle';
+      pinFragment.dataset.rooms = data[i].offer.rooms;
+      pinFragment.dataset.guests = data[i].offer.guests;
+      pinFragment.dataset.features = data[i].offer.features;
+      pinFragment.querySelector('img').src = data[i].author.avatar;
+      pinFragment.querySelector('img').alt = data[i].offer.title;
       Map.pinsBlock.appendChild(pinFragment);
     }
-  }
-  renderPins();
+  };
+  window.renderPins(window.advertsData);
 
   Map.pin = Array.from(document.querySelectorAll('.map__pin'));
   Map.pin.shift();
@@ -73,14 +81,10 @@ function makePins() {
     Map.pin.main.addEventListener('mouseup', getCoordinates);
   }
   function onMapPin() {
-    let lastItem = false;
     for (let i = 0; i < Map.pin.length; i++) {
       Map.pin[i].addEventListener('click', function() {
-        if (lastItem) {
-          lastItem.classList.add('hidden');
-        }
-        lastItem = window.card.MAP_CARD[i];
-        window.card.MAP_CARD[i].classList.remove('hidden');
+        window.card.delete();
+        window.card.build(i);
       });
       Map.pin[i].addEventListener('click', getCoordinates);
     }
