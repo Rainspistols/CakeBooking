@@ -10,24 +10,24 @@ function makePins() {
     },
   };
   window.renderPins = function(data) {
-    for (let i = 0; i < data.length; i++) {
+    for (let dataItem of data) {
       var pinFragment = Map.Pin.template.cloneNode(true);
 
-      pinFragment.style = `left: ${data[i].location.x}px; top: ${data[i].location.y}px;`;
-      pinFragment.dataset.type = data[i].offer.type;
-      if (data[i].offer.price < 10000) {
+      pinFragment.style = `left: ${dataItem.location.x}px; top: ${dataItem.location.y}px;`;
+      pinFragment.dataset.type = dataItem.offer.type;
+      if (dataItem.offer.price < 10000) {
         pinFragment.dataset.price = 'low';
-      } else if (data[i].offer.price > 50000) {
+      } else if (dataItem.offer.price > 50000) {
         pinFragment.dataset.price = 'high';
       } else pinFragment.dataset.price = 'middle';
-      pinFragment.dataset.rooms = data[i].offer.rooms;
-      pinFragment.dataset.guests = data[i].offer.guests;
-      for (let q = 0; q < data[i].offer.features.length; q++) {
-        var featuresName = data[i].offer.features[q];
+      pinFragment.dataset.rooms = dataItem.offer.rooms;
+      pinFragment.dataset.guests = dataItem.offer.guests;
+      for (let feature of dataItem.offer.features) {
+        var featuresName = feature;
         pinFragment.dataset[`${featuresName}`] = featuresName;
       }
-      pinFragment.querySelector('img').src = data[i].author.avatar;
-      pinFragment.querySelector('img').alt = data[i].offer.title;
+      pinFragment.querySelector('img').src = dataItem.author.avatar;
+      pinFragment.querySelector('img').alt = dataItem.offer.title;
       Map.pinsBlock.appendChild(pinFragment);
     }
   };

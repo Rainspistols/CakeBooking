@@ -48,13 +48,9 @@
         },
         features(i) {
           var cardFeatures = mapCardFragment.querySelector('.popup__features');
-          for (
-            let q = 0;
-            q < window.advertsData[i].offer.features.length;
-            q++
-          ) {
+          for (let feature of window.advertsData[i].offer.features) {
             let li = document.createElement('li');
-            li.className = `feature feature--${window.advertsData[i].offer.features[q]}`;
+            li.className = `feature feature--${feature}`;
             cardFeatures.appendChild(li);
           }
         },
@@ -64,9 +60,9 @@
             cardPhotoImg = cardPhotoLi.querySelector('img');
           // ^^clone right quantity of empty elements, and give them src
           cardPhotoImg.src = window.advertsData[i].offer.photos[0];
-          for (let k = 1; k < window.advertsData[i].offer.photos.length; k++) {
+          for (let photo of window.advertsData[i].offer.photos) {
             cardPhotosUl.appendChild(cardPhotoLi.cloneNode(true));
-            cardPhotoImg.src = window.advertsData[i].offer.photos[k];
+            cardPhotoImg.src = photo;
           }
         },
         desctiption(i) {
@@ -114,4 +110,3 @@
     });
   }
 })();
-
