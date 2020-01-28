@@ -610,6 +610,7 @@ textarea:focus {
 .notice__form textarea {
   width: calc(100% - 20px);
   height: 230px;
+  padding: 20px;
 }
 
 .notice__form input[type='file'] {
@@ -637,6 +638,7 @@ textarea:focus {
   font-size: 14px;
   box-sizing: border-box;
   padding: 10px 10px 5px;
+  cursor: pointer;
 }
 
 .notice__form .drop-zone:hover {
@@ -644,7 +646,13 @@ textarea:focus {
 }
 
 .form__photo-container {
-  width: 140px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form__photo-container div {
+  width: 100px;
+  margin-right: 20px;
 }
 
 .form__element--submit {
