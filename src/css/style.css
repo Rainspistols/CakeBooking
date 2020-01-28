@@ -132,11 +132,11 @@ textarea:focus {
 }
 
 .feature {
-  background: url('../img/features-sprite.webp') center no-repeat;
+  background: url('/img/features-sprite.webp') center no-repeat;
 }
 
 .no-webp .feature {
-  background: url('../img/features-sprite.png') center no-repeat;
+  background: url('./img/features-sprite.png') center no-repeat;
 }
 
 .feature--dishwasher {
@@ -176,11 +176,11 @@ textarea:focus {
 }
 
 .header {
-  background: url('../img/logo.webp') no-repeat center;
+  background: url('/img/logo.webp') no-repeat center;
 }
 
 .no-webp .header {
-  background: url('../img/logo.png') no-repeat center;
+  background: url('./img/logo.png') no-repeat center;
 }
 
 .map {
@@ -197,11 +197,11 @@ textarea:focus {
 }
 
 .map {
-  background: url('../img/map.webp') no-repeat center bottom;
+  background: url('./img/map.webp') no-repeat center bottom;
 }
 
 .no-webp .map {
-  background: url('../img/map.png') no-repeat center bottom;
+  background: url('./img/map.png') no-repeat center bottom;
 }
 
 .map__pins {
@@ -734,11 +734,11 @@ textarea:focus {
 }
 
 .footer-social-item {
-  background: url('../img/social-sprite.webp') no-repeat -59px -59px;
+  background: url('/img/social-sprite.webp') no-repeat -59px -59px;
 }
 
 .no-webp .footer-social-item {
-  background: url('../img/social-sprite.png') no-repeat -59px -59px;
+  background: url('./img/social-sprite.png') no-repeat -59px -59px;
 }
 
 .footer-social-item:hover {
