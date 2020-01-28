@@ -734,7 +734,7 @@ textarea:focus {
 }
 
 .footer-social-item {
-  background: url('/img/social-sprite.webp') no-repeat -59px -59px;
+  background: url('./img/social-sprite.webp') no-repeat -59px -59px;
 }
 
 .no-webp .footer-social-item {
